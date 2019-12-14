@@ -767,30 +767,24 @@ global.$ = require('jquery')
 
 이제 오류없이 첨부파일이 삭제될 것이다. 
 
-**app/views/posts/show.html.erb** 뷰 파일에도 위의 첨부파일 썸네일 보기를 추가한다. 
+에디터에 삽입한 파일들의 썸네일을 표시하는 부분도 파셜 템플릿(**app/views/posts/_preview_embeds.html.erb**)으로 리팩토링하면, 
 
 ```erb
-···
-<div id="preview_file_attachments" class='my-3' data-controller='fancybox'>
-  <%= render 'preview_file_attachment', post: @post %>
-</div>
-···
-```
 
-에디터에 삽입한 파일들의 썸네일을 표시하는 부분도 파셜 템플릿(**app/views/posts/preview_embeds.html.erb**)으로 리팩토링하면, 
-
-```erb
-<% post.content.embeds.each do |file| %>
-  <% if file.representable? %>
-    <div style="display:inline-block;position: relative;width:100px;height:100px;margin: 3px;">
-      <% if file.content_type.include? 'image'%>
-        <%= link_to image_tag(file.variant(resize_to_fill: [100, 100]), class: 'img-fluid rounded'), file, download: true, class: 'border border-primary d-inline-block rounded' %>
-      <% else %>
-          <%= link_to image_tag(file.preview(resize_to_fill: [100, 100]), class: 'img-fluid rounded'), file, download: true, class: 'border border-primary d-inline-block rounded' %>
-      <% end %>
-    </div>
-  <% else %>
-    <%= link_to file.filename, file, download: true, class: 'btn btn-secondary' %>
+<% if post.content.embeds.size.positive? %>
+  <div>삽입된 파일(<%= post.content.embeds.size %>) :</div>
+  <% post.content.embeds.each do |file| %>
+    <% if file.representable? %>
+      <div style="display:inline-block;position: relative;width:100px;height:100px;margin: 3px;">
+        <% if file.content_type.include? 'image'%>
+          <%= link_to image_tag(file.variant(resize_to_fill: [100, 100]), class: 'img-fluid rounded'), file, download: true, class: 'border border-primary d-inline-block rounded' %>
+        <% else %>
+            <%= link_to image_tag(file.preview(resize_to_fill: [100, 100]), class: 'img-fluid rounded'), file, download: true, class: 'border border-primary d-inline-block rounded' %>
+        <% end %>
+      </div>
+    <% else %>
+      <%= link_to file.filename, file, download: true, class: 'btn btn-secondary' %>
+    <% end %>
   <% end %>
 <% end %>
 ```
