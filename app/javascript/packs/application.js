@@ -27,3 +27,8 @@ document.addEventListener('turbolinks:load', () => {
 })
 require("trix")
 require("@rails/actiontext")
+
+// Fancybox
+require('@fancyapps/fancybox/dist/jquery.fancybox.js');
+// Fancybox Stylesheet
+require('@fancyapps/fancybox/dist/jquery.fancybox.css');
