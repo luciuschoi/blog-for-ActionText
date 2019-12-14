@@ -518,7 +518,7 @@ export default class extends Controller {
     this.filesTarget.addEventListener('change', function (e) {   
       // 파일 선택시 처리해야 할 작업
       // ···
-      console.log("Files were selected."");
+      console.log("Files were selected.");
       console.log(e.target.files);
     });
   }
@@ -554,7 +554,7 @@ const helpers = require('./helpers');
 export default class extends Controller {
   static targets = [ 'files' ]
 
-	connect() {
+  connect() {
     console.log("file_upload_controller was connected...");
     this.filesTarget.addEventListener('change', function (e) {   
       let files = e.target.files;
