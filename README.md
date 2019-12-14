@@ -441,19 +441,24 @@ export default class extends Controller {
 
 ```erb
 ···
-<% @post.content.embeds.each do |file| %>
-  <% if file.representable? %>
-    <div style="display:inline-block;position: relative;width:100px;height:100px;margin: 3px;">
-      <% if file.content_type.include? 'image'%>
-        <%= link_to image_tag(file.variant(resize_to_fill: [100, 100]), class: 'img-fluid rounded'), file, download: true, class: 'border border-primary d-inline-block rounded' %>
-      <% else %>
-          <%= link_to image_tag(file.preview(resize_to_fill: [100, 100]), class: 'img-fluid rounded'), file, download: true, class: 'border border-primary d-inline-block rounded' %>
-      <% end %>
-    </div>
-  <% else %>
-    <%= link_to file.filename, file, download: true, class: 'btn btn-secondary' %>
+<p>
+  <strong>Embeded files(<%= @post.content.embeds.size %>):</strong>
+  <% @post.content.embeds.each do |file| %>
+    <% if file.representable? %>
+      <div style="display:inline-block;position: relative;width:100px;height:100px;margin: 3px;">
+        <% if file.content_type.include? 'image'%>
+          <%= link_to image_tag(file.variant(resize_to_fill: [100, 100]), class: 'img-fluid rounded'), file, download: true, class: 'border border-primary d-inline-block rounded' %>
+        <% else %>
+            <%= link_to image_tag(file.preview(resize_to_fill: [100, 100]), class: 'img-fluid rounded'), file, download: true, class: 'border border-primary d-inline-block rounded' %>
+        <% end %>
+      </div>
+    <% else %>
+      <%= link_to file.filename, file, download: true, class: 'btn btn-secondary' %>
+    <% end %>
   <% end %>
-<% end %>
+</p>
+
+<hr>
 ···
 ```
 
