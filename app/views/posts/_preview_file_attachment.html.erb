@@ -1,0 +1,34 @@
+<% if post.files.attached? %>
+  <div>첨부된 파일(<%= post.files.size %>) :</div>
+  <% post.files.each do |file| %>
+    <% if file.content_type.include? 'image' %>
+      <div class='file-thumbnail'>
+          <% if file.content_type.include? 'image'%>
+            <%= link_to image_tag(file.variant(resize_to_fill: [100, 100]), class: 'img-fluid rounded'), file, data: { fancybox: 'gallery', caption: file.filename }  %>
+          <% else %>
+              <%= link_to image_tag(file.preview(resize_to_fill: [100, 100]), class: 'img-fluid rounded'), file  %>
+          <% end %>
+          <%= link_to fa_icon(:solid, 'trash'), delete_post_file_attachment_path(post.id, file.blob_id),
+                method: :delete,
+                remote: true,
+                data: { confirm: 'Are you sure?' },
+                class: 'text-danger',
+                style: 'position: absolute; top: 0; right: 0; margin-right: 4px;' %>
+      </div>
+    <% end %>
+  <% end %>
+  <ul class="list-group mt-2">
+    <% post.files.each do |file| %>
+      <% unless file.content_type.include? 'image' %>
+        <li class="list-group-item">
+          <%= fa_icon(:solid, 'download') %> <%= link_to file.filename, file %>
+          <%= link_to fa_icon(:solid, 'trash'), delete_post_file_attachment_path(post.id, file.blob_id),
+                  method: :delete,
+                  remote: true,
+                  data: { confirm: 'Are you sure?' },
+                  class: 'text-danger' %>
+        </li>
+      <% end %>
+    <% end %>
+  </ul>
+<% end %>

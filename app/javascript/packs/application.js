@@ -32,3 +32,5 @@ require("@rails/actiontext")
 require('@fancyapps/fancybox/dist/jquery.fancybox.js');
 // Fancybox Stylesheet
 require('@fancyapps/fancybox/dist/jquery.fancybox.css');
+
+global.$ = require('jquery')

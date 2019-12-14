@@ -1,5 +1,5 @@
 class PostsController < ApplicationController
-  before_action :set_post, only: [:show, :edit, :update, :destroy]
+  before_action :set_post, only: [:show, :edit, :update, :destroy,  :delete_file_attachment]
 
   # GET /posts
   # GET /posts.json
@@ -60,6 +60,15 @@ class PostsController < ApplicationController
       format.json { head :no_content }
     end
   end
+
+  def delete_file_attachment
+    attached_file = ActiveStorage::Attachment.find_by blob_id: params[:blob_id]
+    attached_file.purge_later
+    # redirect_back(fallback_location: @admin_note)
+    respond_to do |format|
+      format.js
+    end
+  end  
 
   private
     # Use callbacks to share common setup or constraints between actions.
