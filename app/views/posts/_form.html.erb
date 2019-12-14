@@ -24,12 +24,15 @@
   <div class="field">
     <%= label_tag 'Attachment Files' %>
     <div class='alert alert-secondary'>
-      <div data-controller="file-upload" class="custom-file" style='height: auto;'>
-        <%= form.file_field :files, multiple: true, id: 'customFile', class: 'custom-file-input', data: { target: 'file-upload.files' } %>
+      <div id="preview_file_attachments" style='height:auto;'>
+        <%= render 'preview_file_attachment', post: form.object %>
+      </div>
+      <div class="custom-file" data-controller='file-upload' style='height: auto;'>
+        <%= form.file_field :files, multiple: true, id: 'customFile', class: 'custom-file-input', data: { target: 'file-upload.files'} %>
         <%= form.label :files, 'Choose Files', for: 'customFile', class: 'custom-file-label' %>
       </div>
     </div>
-  </div>  
+  </div> 
 
   <div class="actions">
     <%= form.submit class: 'btn btn-primary' %>

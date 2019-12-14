@@ -605,7 +605,7 @@ module.exports = {
 
 ```erb
 <div id="preview_file_attachments" class='my-3' data-controller='fancybox'>
-  <%= render 'preview_file_attachment', note: @admin_note %>
+  <%= render 'preview_file_attachment', post: @post %>
 </div>
 ```
 
@@ -616,7 +616,7 @@ module.exports = {
   <%= label_tag 'Attachment Files' %>
   <div class='alert alert-secondary'>
     <div id="preview_file_attachments" style='height:auto;'>
-      <%= render 'preview_file_attachment', note: form.object %>
+      <%= render 'preview_file_attachment', post: form.object %>
     </div>
     <div class="custom-file" data-controller='file-upload' style='height: auto;'>
       <%= form.file_field :files, multiple: true, id: 'customFile', class: 'custom-file-input', data: { target: 'file-upload.files'} %>
@@ -624,6 +624,45 @@ module.exports = {
     </div>
   </div>
 </div>
+```
+
+**app/views/posts/_preview_file_attachment.html.erb** 파일을 생성하고 아래와 같이 작성한다. 
+
+```erb
+<% if post.files.attached? %>
+  <div>첨부된 파일(<%= post.files.size %>) :</div>
+  <% post.files.each do |file| %>
+    <% if file.content_type.include? 'image' %>
+      <div class='file-thumbnail'>
+          <% if file.content_type.include? 'image'%>
+            <%= link_to image_tag(file.variant(resize_to_fill: [100, 100]), class: 'img-fluid rounded'), file, data: { fancybox: 'gallery', caption: file.filename }  %>
+          <% else %>
+              <%= link_to image_tag(file.preview(resize_to_fill: [100, 100]), class: 'img-fluid rounded'), file  %>
+          <% end %>
+          <%= link_to fa_icon(:solid, 'trash'), delete_post_file_attachment_path(post.id, file.blob_id),
+                method: :delete,
+                remote: true,
+                data: { confirm: 'Are you sure?' },
+                class: 'text-danger',
+                style: 'position: absolute; top: 0; right: 0; margin-right: 4px;' %>
+      </div>
+    <% end %>
+  <% end %>
+  <ul class="list-group mt-2">
+    <% post.files.each do |file| %>
+      <% unless file.content_type.include? 'image' %>
+        <li class="list-group-item">
+          <%= fa_icon(:solid, 'download') %> <%= link_to file.filename, file %>
+          <%= link_to fa_icon(:solid, 'trash'), delete_post_file_attachment_path(post.id, file.blob_id),
+                  method: :delete,
+                  remote: true,
+                  data: { confirm: 'Are you sure?' },
+                  class: 'text-danger' %>
+        </li>
+      <% end %>
+    <% end %>
+  </ul>
+<% end %>
 ```
 
 **Font Awesome** 을 사용하기 위해 아래와 같이 명령을 실행한다.
@@ -710,45 +749,6 @@ delete 'posts/:id/file_attachments/:blob_id', to: 'posts#delete_file_attachment'
 ```scss
 ···
 @import './styles.scss';
-```
-
-**app/views/posts/_preview_file_attachment.html.erb** 파일을 생성하고 아래와 같이 작성한다. 
-
-```erb
-<% if post.files.attached? %>
-  <div>첨부된 파일(<%= post.files.size %>) :</div>
-  <% post.files.each do |file| %>
-    <% if file.content_type.include? 'image' %>
-      <div class='file-thumbnail'>
-          <% if file.content_type.include? 'image'%>
-            <%= link_to image_tag(file.variant(resize_to_fill: [100, 100]), class: 'img-fluid rounded'), file, data: { fancybox: 'gallery', caption: file.filename }  %>
-          <% else %>
-              <%= link_to image_tag(file.preview(resize_to_fill: [100, 100]), class: 'img-fluid rounded'), file  %>
-          <% end %>
-          <%= link_to fa_icon(:solid, 'trash'), delete_post_file_attachment_path(post.id, file.blob_id),
-                method: :delete,
-                remote: true,
-                data: { confirm: 'Are you sure?' },
-                class: 'text-danger',
-                style: 'position: absolute; top: 0; right: 0; margin-right: 4px;' %>
-      </div>
-    <% end %>
-  <% end %>
-  <ul class="list-group mt-2">
-    <% post.files.each do |file| %>
-      <% unless file.content_type.include? 'image' %>
-        <li class="list-group-item">
-          <%= fa_icon(:solid, 'download') %> <%= link_to file.filename, file %>
-          <%= link_to fa_icon(:solid, 'trash'), delete_post_file_attachment_path(post.id, file.blob_id),
-                  method: :delete,
-                  remote: true,
-                  data: { confirm: 'Are you sure?' },
-                  class: 'text-danger' %>
-        </li>
-      <% end %>
-    <% end %>
-  </ul>
-<% end %>
 ```
 
 ![2019-12-14_14-11-41-6300463](/app/assets/images/readme/2019-12-14_14-11-41-6300463.png)

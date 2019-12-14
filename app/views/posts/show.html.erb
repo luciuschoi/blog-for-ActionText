@@ -29,6 +29,10 @@
   <% end %>
 </p>
 
+<div id="preview_file_attachments" class='my-3' data-controller='fancybox'>
+  <%= render 'preview_file_attachment', note: @admin_note %>
+</div>
+
 <hr>
 
 <%= link_to 'Edit', edit_post_path(@post) %> |
