@@ -7,7 +7,9 @@
 
 <p>
   <strong>Content:</strong>
-  <%= @post.content %>
+  <div data-controller='fancybox'>
+    <%= @post.content %>
+  </div>
 </p>
 
 <%= link_to 'Edit', edit_post_path(@post) %> |
